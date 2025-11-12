@@ -1,0 +1,14 @@
+[
+  {
+    "repository": "PixelOS-Devices/android_kernel_xiaomi_sm6150",
+    "target_path": "kernel/xiaomi/sm6150"
+  },
+  {
+    "repository": "aosp-xiaomi/android_hardware_xiaomi",
+    "target_path": "hardware/xiaomi"
+  },
+  {
+    "repository": "aosp-xiaomi/proprietary_vendor_xiaomi_sm6150-common",
+    "target_path": "vendor/xiaomi/sm6150-common"
+  }
+]
