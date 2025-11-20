@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d332aff_ce60b22d",
+        "filename": "custom.dependencies",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000023
+      },
+      "writtenOn": "2025-11-20T19:19:03Z",
+      "side": 1,
+      "message": "```suggestion\n    \"repository\": \"NoPrincessHere/proprietary_vendor_xiaomi_sm6150-common\",\n```",
+      "revId": "cedaa6c1636501a2f7827313056f3466f831fd49",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    }
+  ]
+}
