@@ -16,6 +16,24 @@
       "message": "```suggestion\n    \"repository\": \"NoPrincessHere/proprietary_vendor_xiaomi_sm6150-common\",\n```",
       "revId": "cedaa6c1636501a2f7827313056f3466f831fd49",
       "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6143f18e_a2482871",
+        "filename": "custom.dependencies",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000036
+      },
+      "writtenOn": "2025-11-20T20:15:10Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "5d332aff_ce60b22d",
+      "revId": "cedaa6c1636501a2f7827313056f3466f831fd49",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
     }
   ]
 }
