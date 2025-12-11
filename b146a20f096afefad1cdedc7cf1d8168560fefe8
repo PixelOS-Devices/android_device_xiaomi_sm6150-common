@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cc65a29_0ac99463",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2025-12-11T11:35:48Z",
+      "side": 1,
+      "message": "Thermals needs to be checked as well for M3E",
+      "revId": "b146a20f096afefad1cdedc7cf1d8168560fefe8",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    }
+  ]
+}
