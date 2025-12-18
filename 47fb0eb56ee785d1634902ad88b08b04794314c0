@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "277e2cad_a6fffcd9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2025-12-18T03:35:01Z",
+      "side": 1,
+      "message": "That\u0027s not what the original commit did, if we switch to the hardware/dolby structure, just pick https://review.pixelos.net/c/PixelOS-Devices/android_device_xiaomi_sweet/+/4238 in common too but just the audio effects change",
+      "revId": "47fb0eb56ee785d1634902ad88b08b04794314c0",
+      "serverId": "58543e18-2196-4633-8043-7787712585ad"
+    }
+  ]
+}
