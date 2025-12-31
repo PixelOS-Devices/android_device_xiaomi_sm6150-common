@@ -17,14 +17,13 @@
 package org.lineageos.settings.thermal;
 
 import android.app.ActivityTaskManager;
-import android.app.TaskStackListener;
 import android.app.Service;
+import android.app.TaskStackListener;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -38,21 +37,22 @@ public class ThermalService extends Service {
     private String mCurrentApp = "";
     private ThermalUtils mThermalUtils;
 
-    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()) {
-                case Intent.ACTION_SCREEN_OFF:
-                    mScreenOn = false;
-                    setThermalProfile();
-                    break;
-                case Intent.ACTION_SCREEN_ON:
-                    mScreenOn = true;
-                    setThermalProfile();
-                    break;
-            }
-        }
-    };
+    private BroadcastReceiver mIntentReceiver =
+            new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    switch (intent.getAction()) {
+                        case Intent.ACTION_SCREEN_OFF:
+                            mScreenOn = false;
+                            setThermalProfile();
+                            break;
+                        case Intent.ACTION_SCREEN_ON:
+                            mScreenOn = true;
+                            setThermalProfile();
+                            break;
+                    }
+                }
+            };
 
     @Override
     public void onCreate() {
@@ -93,21 +93,23 @@ public class ThermalService extends Service {
         }
     }
 
-    private final TaskStackListener mTaskListener = new TaskStackListener() {
-        @Override
-        public void onTaskStackChanged() {
-            try {
-                final ActivityTaskManager.RootTaskInfo focusedTask =
-                        ActivityTaskManager.getService().getFocusedRootTaskInfo();
-                if (focusedTask != null && focusedTask.topActivity != null) {
-                    ComponentName taskComponentName = focusedTask.topActivity;
-                    String foregroundApp = taskComponentName.getPackageName();
-                    if (!foregroundApp.equals(mCurrentApp)) {
-                        mCurrentApp = foregroundApp;
-                        setThermalProfile();
+    private final TaskStackListener mTaskListener =
+            new TaskStackListener() {
+                @Override
+                public void onTaskStackChanged() {
+                    try {
+                        final ActivityTaskManager.RootTaskInfo focusedTask =
+                                ActivityTaskManager.getService().getFocusedRootTaskInfo();
+                        if (focusedTask != null && focusedTask.topActivity != null) {
+                            ComponentName taskComponentName = focusedTask.topActivity;
+                            String foregroundApp = taskComponentName.getPackageName();
+                            if (!foregroundApp.equals(mCurrentApp)) {
+                                mCurrentApp = foregroundApp;
+                                setThermalProfile();
+                            }
+                        }
+                    } catch (Exception e) {
                     }
                 }
-            } catch (Exception e) {}
-        }
-    };
+            };
 }
