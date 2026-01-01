@@ -18,22 +18,32 @@
 package org.lineageos.settings.doze;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.app.AlertDialog;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreferenceCompat;
+
 import com.android.settingslib.widget.MainSwitchPreference;
-import com.android.settingslib.widget.SettingsBasePreferenceFragment;
+
 import org.lineageos.settings.R;
 import org.lineageos.settings.utils.FileUtils;
 
-public class DozeSettingsFragment
-        extends SettingsBasePreferenceFragment implements OnPreferenceChangeListener {
+public class DozeSettingsFragment extends PreferenceFragment
+        implements OnPreferenceChangeListener, OnCheckedChangeListener {
+    private MainSwitchPreference mSwitchBar;
+
     private SwitchPreferenceCompat mAlwaysOnDisplayPreference;
     private ListPreference mDozeBrightnessPreference;
     private SwitchPreferenceCompat mWakeOnGesturePreference;
@@ -45,7 +55,7 @@ public class DozeSettingsFragment
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.doze_settings, rootKey);
+        addPreferencesFromResource(R.xml.doze_settings);
 
         SharedPreferences prefs =
                 getActivity().getSharedPreferences("doze_settings", Activity.MODE_PRIVATE);
@@ -55,12 +65,11 @@ public class DozeSettingsFragment
 
         boolean dozeEnabled = DozeUtils.isDozeEnabled(getActivity());
 
-        MainSwitchPreference switchBar = findPreference(DozeUtils.DOZE_ENABLE);
-        switchBar.setOnPreferenceChangeListener(this);
-        switchBar.setChecked(dozeEnabled);
+        mSwitchBar = (MainSwitchPreference) findPreference(DozeUtils.DOZE_ENABLE);
+        mSwitchBar.addOnSwitchChangeListener(this);
+        mSwitchBar.setChecked(dozeEnabled);
 
-        mAlwaysOnDisplayPreference =
-                (SwitchPreferenceCompat) findPreference(DozeUtils.ALWAYS_ON_DISPLAY);
+        mAlwaysOnDisplayPreference = (SwitchPreferenceCompat) findPreference(DozeUtils.ALWAYS_ON_DISPLAY);
         mAlwaysOnDisplayPreference.setEnabled(dozeEnabled);
         mAlwaysOnDisplayPreference.setChecked(DozeUtils.isAlwaysOnEnabled(getActivity()));
         mAlwaysOnDisplayPreference.setOnPreferenceChangeListener(this);
@@ -71,7 +80,8 @@ public class DozeSettingsFragment
         mDozeBrightnessPreference.setOnPreferenceChangeListener(this);
 
         PreferenceCategory gesturesCategory =
-                (PreferenceCategory) getPreferenceScreen().findPreference(DozeUtils.CATEG_GESTURES);
+                (PreferenceCategory) getPreferenceScreen().findPreference(
+                        DozeUtils.CATEG_GESTURES);
         PreferenceCategory pickupSensorCategory =
                 (PreferenceCategory) getPreferenceScreen().findPreference(
                         DozeUtils.CATEG_PICKUP_SENSOR);
@@ -79,8 +89,7 @@ public class DozeSettingsFragment
                 (PreferenceCategory) getPreferenceScreen().findPreference(
                         DozeUtils.CATEG_PROX_SENSOR);
 
-        mWakeOnGesturePreference =
-                (SwitchPreferenceCompat) findPreference(DozeUtils.WAKE_ON_GESTURE_KEY);
+        mWakeOnGesturePreference = (SwitchPreferenceCompat) findPreference(DozeUtils.WAKE_ON_GESTURE_KEY);
         mWakeOnGesturePreference.setEnabled(dozeEnabled);
         mWakeOnGesturePreference.setOnPreferenceChangeListener(this);
 
@@ -88,8 +97,7 @@ public class DozeSettingsFragment
         mPickUpPreference.setEnabled(dozeEnabled);
         mPickUpPreference.setOnPreferenceChangeListener(this);
 
-        mHandwavePreference =
-                (SwitchPreferenceCompat) findPreference(DozeUtils.GESTURE_HAND_WAVE_KEY);
+        mHandwavePreference = (SwitchPreferenceCompat) findPreference(DozeUtils.GESTURE_HAND_WAVE_KEY);
         mHandwavePreference.setEnabled(dozeEnabled);
         mHandwavePreference.setOnPreferenceChangeListener(this);
 
@@ -120,27 +128,7 @@ public class DozeSettingsFragment
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (DozeUtils.DOZE_ENABLE.equals(preference.getKey())) {
-            boolean isChecked = (Boolean) newValue;
-            DozeUtils.enableDoze(getActivity(), isChecked);
-
-            if (!isChecked) {
-                DozeUtils.enableAlwaysOn(getActivity(), false);
-                mAlwaysOnDisplayPreference.setChecked(false);
-                mDozeBrightnessPreference.setValue(DozeUtils.DOZE_BRIGHTNESS_LBM);
-                DozeUtils.updateDozeBrightnessIcon(getContext(), mDozeBrightnessPreference);
-                mPickUpPreference.setChecked(false);
-                mHandwavePreference.setChecked(false);
-                mPocketPreference.setChecked(false);
-            }
-            mAlwaysOnDisplayPreference.setEnabled(isChecked);
-            mDozeBrightnessPreference.setEnabled(
-                    isChecked && DozeUtils.isAlwaysOnEnabled(getActivity()));
-            mWakeOnGesturePreference.setEnabled(isChecked);
-            mPickUpPreference.setEnabled(isChecked);
-            mHandwavePreference.setEnabled(isChecked);
-            mPocketPreference.setEnabled(isChecked);
-        } else if (DozeUtils.ALWAYS_ON_DISPLAY.equals(preference.getKey())) {
+        if (DozeUtils.ALWAYS_ON_DISPLAY.equals(preference.getKey())) {
             DozeUtils.enableAlwaysOn(getActivity(), (Boolean) newValue);
             if (!(Boolean) newValue) {
                 mDozeBrightnessPreference.setValue(DozeUtils.DOZE_BRIGHTNESS_LBM);
@@ -165,21 +153,45 @@ public class DozeSettingsFragment
         return true;
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        DozeUtils.enableDoze(getActivity(), isChecked);
+        DozeUtils.checkDozeService(getActivity());
+
+        mSwitchBar.setChecked(isChecked);
+
+        if (!isChecked) {
+            DozeUtils.enableAlwaysOn(getActivity(), false);
+            mAlwaysOnDisplayPreference.setChecked(false);
+            mDozeBrightnessPreference.setValue(DozeUtils.DOZE_BRIGHTNESS_LBM);
+            DozeUtils.updateDozeBrightnessIcon(getContext(), mDozeBrightnessPreference);
+            mPickUpPreference.setChecked(false);
+            mHandwavePreference.setChecked(false);
+            mPocketPreference.setChecked(false);
+        }
+        mAlwaysOnDisplayPreference.setEnabled(isChecked);
+        mDozeBrightnessPreference.setEnabled(
+                isChecked && DozeUtils.isAlwaysOnEnabled(getActivity()));
+        mWakeOnGesturePreference.setEnabled(isChecked);
+        mPickUpPreference.setEnabled(isChecked);
+        mHandwavePreference.setEnabled(isChecked);
+        mPocketPreference.setEnabled(isChecked);
+    }
+
     private void showHelp() {
         AlertDialog helpDialog = new AlertDialog.Builder(getActivity())
-                                         .setTitle(R.string.doze_settings_help_title)
-                                         .setMessage(R.string.doze_settings_help_text)
-                                         .setPositiveButton(R.string.dialog_ok,
-                                                 (dialog, which) -> {
-                                                     getActivity()
-                                                             .getSharedPreferences("doze_settings",
-                                                                     Activity.MODE_PRIVATE)
-                                                             .edit()
-                                                             .putBoolean("first_help_shown", true)
-                                                             .commit();
-                                                     dialog.cancel();
-                                                 })
-                                         .create();
+                .setTitle(R.string.doze_settings_help_title)
+                .setMessage(R.string.doze_settings_help_text)
+                .setPositiveButton(R.string.dialog_ok,
+                        (dialog, which) -> {
+                            getActivity()
+                                    .getSharedPreferences("doze_settings", Activity.MODE_PRIVATE)
+                                    .edit()
+                                    .putBoolean("first_help_shown", true)
+                                    .commit();
+                            dialog.cancel();
+                        })
+                .create();
         helpDialog.show();
     }
 }

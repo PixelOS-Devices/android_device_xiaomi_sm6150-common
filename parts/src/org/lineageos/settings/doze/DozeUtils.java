@@ -33,6 +33,7 @@ import android.provider.Settings;
 import android.util.Log;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
+
 import org.lineageos.settings.R;
 import org.lineageos.settings.utils.FileUtils;
 
@@ -67,7 +68,6 @@ public final class DozeUtils {
         checkDozeService(context);
         restoreDozeModes(context);
     }
-
     public static void startService(Context context) {
         if (DEBUG)
             Log.d(TAG, "Starting service");
@@ -94,7 +94,6 @@ public final class DozeUtils {
                     DOZE_BRIGHTNESS_KEY, String.valueOf(DOZE_BRIGHTNESS_LBM)));
         }
     }
-
     protected static boolean getProxCheckBeforePulse(Context context) {
         try {
             Context con = context.createPackageContext("com.android.systemui", 0);

@@ -17,18 +17,20 @@
 package org.lineageos.settings.thermal;
 
 import android.app.ActivityTaskManager;
-import android.app.Service;
 import android.app.TaskStackListener;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
 public class ThermalService extends Service {
+
     private static final String TAG = "ThermalService";
     private static final boolean DEBUG = false;
 
@@ -54,8 +56,7 @@ public class ThermalService extends Service {
 
     @Override
     public void onCreate() {
-        if (DEBUG)
-            Log.d(TAG, "Creating service");
+        if (DEBUG) Log.d(TAG, "Creating service");
         try {
             ActivityTaskManager.getService().registerTaskStackListener(mTaskListener);
         } catch (RemoteException e) {
@@ -68,8 +69,7 @@ public class ThermalService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (DEBUG)
-            Log.d(TAG, "Starting service");
+        if (DEBUG) Log.d(TAG, "Starting service");
         return START_STICKY;
     }
 
@@ -107,8 +107,7 @@ public class ThermalService extends Service {
                         setThermalProfile();
                     }
                 }
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
         }
     };
 }

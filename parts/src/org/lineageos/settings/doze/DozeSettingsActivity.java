@@ -18,6 +18,7 @@
 package org.lineageos.settings.doze;
 
 import android.os.Bundle;
+
 import com.android.settingslib.collapsingtoolbar.CollapsingToolbarBaseActivity;
 
 public class DozeSettingsActivity extends CollapsingToolbarBaseActivity {
@@ -27,7 +28,7 @@ public class DozeSettingsActivity extends CollapsingToolbarBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getSupportFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .replace(com.android.settingslib.collapsingtoolbar.R.id.content_frame,
                         new DozeSettingsFragment(), TAG_DOZE)
