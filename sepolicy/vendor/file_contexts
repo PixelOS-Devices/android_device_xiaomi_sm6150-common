@@ -27,6 +27,10 @@
 # Dolby Fix script
 /vendor/bin/init\.dolby_fix\.sh                                      u:object_r:vendor_init-dolby-sh_exec:s0
 
+# Face unlock
+/data/vendor/face(/.*)?                                              u:object_r:vendor_face_data_file:s0
+/vendor/etc/faceunlock(/.*)?                                         u:object_r:vendor_face_resources_file:s0
+
 # Fingerprint
 /dev/fortsense_fp                                                    u:object_r:fingerprint_device:s0
 /dev/goodix_fp                                                       u:object_r:fingerprint_device:s0
@@ -37,6 +41,7 @@
 /sys/devices/virtual/touch/tp_dev/fp_state                           u:object_r:vendor_sysfs_sensors:s0
 
 # HALs
+/(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.face-service\.xiaomi u:object_r:hal_face_default_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint-service\.xiaomi u:object_r:hal_fingerprint_default_exec:s0
 /vendor/bin/hw/vendor\.lineage\.livedisplay-service\.xiaomi_sm6150         u:object_r:hal_lineage_livedisplay_qti_exec:s0
 /vendor/bin/hw/vendor\.xiaomi\.hardware\.motor@1\.0-service                u:object_r:hal_motor_default_exec:s0
